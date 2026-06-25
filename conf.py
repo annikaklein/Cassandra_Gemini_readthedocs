@@ -6,9 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'SDB'
+project = 'Satellite Derived Bathymetry'
 copyright = '2026, Annika klein'
-author = 'Annika klein'
+author = 'Annika Klein'
 release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
