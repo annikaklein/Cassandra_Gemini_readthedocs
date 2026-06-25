@@ -9,12 +9,13 @@ Welcome to Cassandra Gemini's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+
    hallo
    tes
    methods
    code
-   bsp1.rst
-   bsp2.rst
+   bsp1
+   bsp2
 
 
 

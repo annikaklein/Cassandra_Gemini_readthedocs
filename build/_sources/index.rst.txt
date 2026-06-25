@@ -17,8 +17,6 @@ Welcome to Cassandra Gemini's documentation!
    bsp2.rst
 
 
-
-
 Indices and tables
 ==================
 
