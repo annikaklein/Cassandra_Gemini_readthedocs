@@ -1,7 +1,7 @@
 Citations
 -------------------------------
-Abbas et al. (2019) - Abbas, M., Melesse, A., Scinto, L. & Rehage, J. Satellite estimation of chlorophyll-a using moderate resolution imaging spectroradiometer (modis) sensor in shallow coastal water bodies: Validation and improvement. Water 11, 1621, DOI: 10.3390/w11081621 (2019).
-Albert (2004) -  Inversion technique for optical remote sensing in shallow water. Ph.D. thesis, University of Hamburg (2004). Retrieved from https://ediss.sub.uni-hamburg.de/handle/ediss/812.
-Ficek et al. (2011) - Ficek, D., Zapadka, T. & Dera, J. Remote sensing reflectance of pomeranian lakes and the baltic. Oceanologia 53, 959–970, DOI: 10.5697/oc.53-4.959 (2011).
-Parwati et al. (2022) - Parwati, E., Adawiah, S. W., Afgatiani, P. M. & Budhiman, S. Tss analysis using remote sensing data to detect reclamation activity in jakarta bay. In Machine learning and information processing: Proceedings of ICMLIP 2023, vol. 2981, 030007, DOI: 10.1063/5.0182603 (AIP Publishing, 2023).
-Wong et al. (2019) - Wong, J., Liew, S. C., Wong, E. W.-S. & Leong, S. C. Y. Estimation of colored dissolved organic matter using sentinel-2 data in the coastal waters of singapore. J. Appl. Remote. Sens. 14, DOI: 10.1117/1.jrs.14.034512 (2020).
+- Abbas et al. (2019) - Abbas, M., Melesse, A., Scinto, L. & Rehage, J. Satellite estimation of chlorophyll-a using moderate resolution imaging spectroradiometer (modis) sensor in shallow coastal water bodies: Validation and improvement. Water 11, 1621, DOI: 10.3390/w11081621 (2019).
+- Albert (2004) -  Inversion technique for optical remote sensing in shallow water. Ph.D. thesis, University of Hamburg (2004). Retrieved from https://ediss.sub.uni-hamburg.de/handle/ediss/812.
+- Ficek et al. (2011) - Ficek, D., Zapadka, T. & Dera, J. Remote sensing reflectance of pomeranian lakes and the baltic. Oceanologia 53, 959–970, DOI: 10.5697/oc.53-4.959 (2011).
+- Parwati et al. (2022) - Parwati, E., Adawiah, S. W., Afgatiani, P. M. & Budhiman, S. Tss analysis using remote sensing data to detect reclamation activity in jakarta bay. In Machine learning and information processing: Proceedings of ICMLIP 2023, vol. 2981, 030007, DOI: 10.1063/5.0182603 (AIP Publishing, 2023).
+- Wong et al. (2019) - Wong, J., Liew, S. C., Wong, E. W.-S. & Leong, S. C. Y. Estimation of colored dissolved organic matter using sentinel-2 data in the coastal waters of singapore. J. Appl. Remote. Sens. 14, DOI: 10.1117/1.jrs.14.034512 (2020).

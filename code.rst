@@ -160,6 +160,86 @@ Method used to estimate CDOM absorption *a*\ :sub:`Y`\ (λ\ :sub:`0`\ )
 
 ----
 
+Imports
+~~~~~~~
+
+All required Python packages are imported here. The cell also initialises
+the project-specific modules ``SDB`` and ``parameters``.
+
+.. code-block:: python
+
+   # --- Standard library ---
+   import os, re, glob
+   from datetime import datetime
+
+   # --- Numerical & data handling ---
+   import numpy as np
+   import pandas as pd
+
+   # --- Visualisation ---
+   import matplotlib.pyplot as plt
+   import matplotlib.colors as mcolors
+   from matplotlib.patches import Patch
+   import cmocean                          # perceptually uniform oceanographic colourmaps
+
+   # --- Geospatial / raster processing ---
+   import rasterio
+   from rasterio.enums import Resampling
+   from rasterio.warp import reproject
+   from rasterio.mask import mask
+   from rasterio.features import rasterize
+   from shapely.geometry import shape, box, mapping
+   from pyproj import Transformer
+   import shapely.ops as ops
+   import xml.etree.ElementTree as ET     # XML parsing (e.g. Landsat metadata)
+
+   # --- Signal processing & interpolation ---
+   from scipy.ndimage import median_filter
+   from scipy.interpolate import interp1d
+   from scipy.optimize import least_squares
+
+   # --- Machine learning / statistics ---
+   from sklearn.linear_model import LinearRegression
+   from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
+   # --- Google Earth Engine ---
+   import ee
+   import geemap
+
+   # --- Project modules ---
+   import parameters                       # user-defined retrieval parameters
+   import SDB as sdb                       # core Cassandra Gemini pipeline functions
+
+   print("✅ All packages loaded")
+
+.. list-table:: Key dependencies
+   :header-rows: 1
+   :widths: 25 75
+
+   * - Package
+     - Purpose
+   * - ``numpy``, ``pandas``
+     - Numerical computation and tabular data handling
+   * - ``rasterio``
+     - Reading, writing and reprojecting raster (satellite) data
+   * - ``shapely``, ``pyproj``
+     - Geometric operations and coordinate reference system transformations
+   * - ``scipy``
+     - Median filtering, interpolation, and least-squares optimisation
+   * - ``sklearn``
+     - Sunglint correction (linear regression) and accuracy metrics
+   * - ``ee``, ``geemap``
+     - Google Earth Engine API access and visualisation
+   * - ``cmocean``
+     - Perceptually uniform colourmaps for oceanographic variables
+   * - ``parameters``
+     - Project-specific empirical coefficients and retrieval settings
+   * - ``SDB``
+     - Core pipeline functions of the *Cassandra Gemini* framework
+
+----
+
+
 Step 0 – Preprocessing
 ~~~~~~~~~~~~~~~~~~~~~~~
 
