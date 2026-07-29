@@ -1,6 +1,6 @@
 /* Logo-Bereich → schwarz, weiße Schrift */
 .wy-side-nav-search {
-    background-color: #000000;
+    background-color: #000000 !important;
 }
 .wy-side-nav-search a,
 .wy-side-nav-search .version {
@@ -29,5 +29,5 @@
 
 /* Alle Sidebar-Links weiß */
 .wy-menu-vertical a {
-    color: #ffffff !important;
+    color: #000000 !important;
 }
