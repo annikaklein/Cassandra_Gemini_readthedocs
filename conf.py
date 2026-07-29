@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Satellite Derived Bathymetry'
+project = 'Satellite-Derived Bathymetry'
 copyright = '2026, Annika Klein'
 author = 'Annika Klein'
 release = '0.1.0'
