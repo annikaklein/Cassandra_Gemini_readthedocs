@@ -1,24 +1,33 @@
-/* Sidebar-Hintergrund */
-.wy-nav-side {
-    background: #2b2b2b;
+/* Logo-Bereich → schwarz, weiße Schrift */
+.wy-side-nav-search {
+    background-color: #000000;
+}
+.wy-side-nav-search a,
+.wy-side-nav-search .version {
+    color: #ffffff !important;
 }
 
-/* Links */
-a {
-    color: #e08c3a;
+/* Aufgeklappte Menüpunkte → grau statt weiß */
+.wy-menu-vertical li.current {
+    background-color: transparent;
+}
+.wy-menu-vertical li.current > a {
+    background-color: #4a4a4a;
+    color: #ffffff !important;
+    border-right: none;
+}
+.wy-menu-vertical li.current ul {
+    background-color: #3d3d3d;
+}
+.wy-menu-vertical li.current ul li a {
+    color: #cccccc !important;
+}
+.wy-menu-vertical li.current ul li.current > a {
+    background-color: #4a4a4a;
+    color: #ffffff !important;
 }
 
-/* Sidebar-Links */
+/* Alle Sidebar-Links weiß */
 .wy-menu-vertical a {
-    color: #cccccc;
-}
-
-/* Aktiver Menüpunkt */
-.wy-menu-vertical li.current a {
-    color: #ffffff;
-}
-
-/* Überschriften */
-h1, h2, h3 {
-    color: #e08c3a;
+    color: #ffffff !important;
 }
