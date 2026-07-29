@@ -7,6 +7,11 @@
     color: #ffffff !important;
 }
 
+/* Alle Sidebar-Links weiß */
+.wy-menu-vertical a {
+    color: #ffffff !important;
+}
+
 /* Aufgeklappte Menüpunkte → grau statt weiß */
 .wy-menu-vertical li.current {
     background-color: transparent;
@@ -27,7 +32,85 @@
     color: #ffffff !important;
 }
 
-/* Alle Sidebar-Links weiß */
-.wy-menu-vertical a {
-    color: #000000 !important;
+/* ============================================================
+   SPEKTRUM: Wellenlängen-Farbverlauf (blau → rot)
+   pro Top-Level-Menüpunkt
+   ============================================================ */
+
+/* 1. Punkt – Blau (~450 nm) */
+.wy-menu-vertical .toctree-l1:nth-child(1) > a {
+    border-left: 4px solid #4477ff;
+    color: #7aabff !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(1).current > a {
+    background-color: #1a2a4a !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(1) .toctree-l2 > a {
+    border-left: 4px solid #4477ff;
+    color: #aaccff !important;
+}
+
+/* 2. Punkt – Cyan (~490 nm) */
+.wy-menu-vertical .toctree-l1:nth-child(2) > a {
+    border-left: 4px solid #00c8c8;
+    color: #00e5e5 !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(2).current > a {
+    background-color: #003a3a !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(2) .toctree-l2 > a {
+    border-left: 4px solid #00c8c8;
+    color: #88dddd !important;
+}
+
+/* 3. Punkt – Grün (~530 nm) */
+.wy-menu-vertical .toctree-l1:nth-child(3) > a {
+    border-left: 4px solid #44bb44;
+    color: #66dd66 !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(3).current > a {
+    background-color: #1a3a1a !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(3) .toctree-l2 > a {
+    border-left: 4px solid #44bb44;
+    color: #99dd99 !important;
+}
+
+/* 4. Punkt – Gelbgrün (~570 nm) */
+.wy-menu-vertical .toctree-l1:nth-child(4) > a {
+    border-left: 4px solid #aacc00;
+    color: #ccee22 !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(4).current > a {
+    background-color: #2a3300 !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(4) .toctree-l2 > a {
+    border-left: 4px solid #aacc00;
+    color: #ccdd88 !important;
+}
+
+/* 5. Punkt – Orange (~600 nm) */
+.wy-menu-vertical .toctree-l1:nth-child(5) > a {
+    border-left: 4px solid #ff8800;
+    color: #ffaa44 !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(5).current > a {
+    background-color: #3a2000 !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(5) .toctree-l2 > a {
+    border-left: 4px solid #ff8800;
+    color: #ffcc99 !important;
+}
+
+/* 6. Punkt – Rot (~650 nm) */
+.wy-menu-vertical .toctree-l1:nth-child(6) > a {
+    border-left: 4px solid #ff3333;
+    color: #ff6666 !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(6).current > a {
+    background-color: #3a0a0a !important;
+}
+.wy-menu-vertical .toctree-l1:nth-child(6) .toctree-l2 > a {
+    border-left: 4px solid #ff3333;
+    color: #ffaaaa !important;
 }
