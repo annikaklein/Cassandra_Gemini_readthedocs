@@ -9,7 +9,7 @@ Configuration
 
 Before running the pipeline, all user-defined parameters must be set
 in the configuration cell. The pipeline follows the processing structure
-shown in Figure 2, proceeding from preprocessing through water depth
+shown in Figure x, proceeding from preprocessing through water depth
 estimation, water constituent retrieval, parameter optimization, and
 tide correction.
 
@@ -110,7 +110,7 @@ Method used to estimate Total Suspended Matter concentration *C*\ :sub:`X`
    * - Value
      - Reference
    * - ``"albert"``
-     - Albert & Mobley (2003)
+     - Albert (2004)
    * - ``"ficek"``
      - Ficek et al. (2011)
    * - ``"parwarti"``
@@ -131,7 +131,7 @@ Method used to estimate Phytoplankton Chlorophyll-a concentration *C*\ :sub:`P`
    * - Value
      - Reference
    * - ``"albert"``
-     - Albert & Mobley (2003)
+     - Albert (2004)
    * - ``"ficek"``
      - Ficek et al. (2011)
    * - ``"abbas"``
@@ -152,7 +152,7 @@ Method used to estimate CDOM absorption *a*\ :sub:`Y`\ (λ\ :sub:`0`\ )
    * - Value
      - Reference
    * - ``"albert"``
-     - Albert & Mobley (2003)
+     - Albert (2004)
    * - ``"ficek"``
      - Ficek et al. (2011)
    * - ``"wong"``

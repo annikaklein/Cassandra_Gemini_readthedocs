@@ -16,6 +16,7 @@ Welcome to Cassandra Gemini's documentation!
    code
    bsp1
    bsp2
+   citations.rst
 
 
 
