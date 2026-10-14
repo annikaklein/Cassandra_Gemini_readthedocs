@@ -4,22 +4,32 @@ Example 2: One Tree Reef
 Description of Study Site
 -------------------------
 
-One Tree Reef (≈ 23.5°S, 152°E) is a wave-exposed coral reef on the southern Great Barrier
-Reef and represents the **clear end** of the tested range. The platform is named after One Tree
-Island, the rubble cay in its lagoon; since the entire reef system is studied
+One Tree Reef (≈ 23.5°S, 152°E) is a coral reef on the southern Great Barrier Reef, Australia,
+and represents the **clear end** of the tested water clarity range. The platform is named after
+One Tree Island, the small rubble cay in its lagoon; since the entire reef system is studied
 (AOI 27.88 km²; 152.036–152.101°E, 23.478–23.516°S), the designation *One Tree Reef* is used.
 
 - Oligotrophic oceanic water, Secchi depth ≈ 15 m.
-- Swell from the east-southeast (mean significant wave height 1.7 m, mean peak period 5.8 s);
-  wave breaking along the reef crest creates white-water that degrades the bottom signal on the
-  exposed eastern and southern margins.
-- Three geomorphic zones (Harris et al., 2023): steep fore-reef slope; near-horizontal reef flat
-  (< 2 m); almost flat sandy lagoon floor deepening to basins of up to 13 m.
+- Full exposure to swell from the east-southeast (mean significant wave height 1.7 m, mean peak
+  period 5.8 s). Wave energy dissipates across the reef crest and creates optically complex
+  white-water along the exposed eastern and southern margins that degrades the bottom-reflected
+  signal.
+- Three geomorphic zones with contrasting depth gradients (Harris et al., 2023): the fore-reef
+  slope drops steeply at the reef rim, the reef flat is near-horizontal at depths below 2 m, and
+  the lagoon floor is an almost flat sandy seabed deepening gently to basins of up to 13 m.
 - Spur-and-groove systems on all margins (spurs 3–12 m, grooves 2–10 m wide) and a network of
-  reticulate patch reefs with near-vertical walls ("The Labyrinth", coral heads 5–30 m,
-  micro-channels < 5 m).
+  reticulate patch reefs with near-vertical walls ("The Labyrinth"; coral heads 5–30 m in
+  diameter, micro-channels < 5 m).
 
-.. todo:: Add study-site map (overview of Australia, zoom on One Tree Reef with AOI and Gladstone).
+.. figure:: _static/Study_Sites.png
+   :width: 90%
+   :align: center
+   :alt: Study sites
+
+   **Study sites.** Panels (c) and (d) show One Tree Reef: (c) overview map of Australia with One
+   Tree Reef marked by a blue dot on the eastern coast; (d) zoom into One Tree Reef, with Gladstone
+   (Queensland) shown for reference. The AOI (27.88 km²) covers the reef flat and the surrounding
+   lagoon. Panels (a) and (b) show Lake Constance (see :doc:`bsp1`).
 
 Data
 ----
@@ -38,36 +48,82 @@ Data
    * - Benchmark product
      - EOMAP WATCOR-X (Sentinel-2 mosaics, 15 May 2017–22 October 2018), GBRMPA Reef GeoHub
    * - Tidal height
-     - 0.149 m MSL (FES2022 correction)
+     - 0.149 m MSL; tidal offsets from the FES2022 model
    * - Sunglint reference area
      - 0.011 km² open-water patch (152.057–152.062°E, 23.485–23.487°S)
 
 Running the Pipeline
 --------------------
 
-.. todo:: Step-by-step configuration (local mode, ``mndwi_threshold = 0.25``) and screenshots.
+This example uses a locally stored scene (``data_source = "local"``).
+
+1. Download the scene ``LC08_L2SP_090076_20181009_20200830_02_T2`` (e.g. from USGS EarthExplorer)
+   into a local folder.
+2. Set the configuration cell with ``data_source = "local"`` and the retrieval methods.
+3. In Step 0, set the AOI and the local path:
+
+   .. code-block:: python
+
+      aoi = sdb.aoi_from_bbox(152.035771, -23.518535, 152.10007, -23.476975)
+      mndwi_threshold = 0.25
+      ROOT       = "/path/to/LC08_L2SP_090076_20181009_20200830_02_T2"
+      bands_used = ["SR_B1", "SR_B2", "SR_B3", "SR_B4", "SR_B5", "SR_B6"]
+      ref_band   = "SR_B3"
+
+   The sunglint reference area is taken from the AOI polygon in local mode.
+4. Run the remaining cells (coefficients, water depth, TSM, Chl-a/CDOM, optimisation) and the
+   export cell; the depth map is saved as ``zB.tif`` (see :doc:`code`).
+
+.. todo:: Add screenshots of the configuration cell and the Step 0 outputs (MNDWI, water mask, sunglint-corrected bands).
 
 Results
 -------
 
-Retrieval of Version 6 (*Cassandra Gemini*) within 0–10 m, N = 13 192 pixels:
+Retrieval of Version 6 (*Cassandra Gemini*) within 0–10 m:
 
 .. list-table::
    :header-rows: 1
 
-   * - R²
+   * - N
+     - R²
      - RMSE
      - MAE
      - Bias
-   * - 0.54
+   * - 13 192
+     - 0.54
      - 0.79 m
      - 0.58 m
      - −0.05 m
 
-The shallow reef platform and surrounding deeper water are reproduced; gaps in the estimate
-correspond to depths beyond the 10 m retrieval limit. Depth is overestimated at the outer reef
-rim and around the island and the channel networks (sub-pixel structure, mixed pixels, wave
-breaking) and slightly underestimated across the inner reef. The error transition depth is
-4.92–6.38 m. See :doc:`results` for the comparison with the EOMAP product.
+.. figure:: _static/OTR_fig_combined_6panel_new.png
+   :width: 100%
+   :align: center
+   :alt: Validation One Tree Reef
 
-.. todo:: Add the six-panel validation figure and a link to the results dataset (DOI).
+   **Comparison between estimated bathymetry (z\ :sub:`B,est`) and reference LiDAR bathymetry
+   (z\ :sub:`B,ref`) for One Tree Reef** within 0–10 m. (a) Reference and (b) estimated depth.
+   (c) Relative difference δz\ :sub:`B`, ranging from −83.1 % to +1109 %; the colour scale is
+   clipped at ±100 %. (d) Signed difference Δz\ :sub:`B` (−5.49 m to +4.41 m); colour scale
+   cropped at the 95th percentile of |Δz\ :sub:`B`|. (e) |Δz\ :sub:`B`| without cropping, revealing
+   localised large errors along the reef rim and at the deeper northern margin. Point colours in
+   (f) correspond to |Δz\ :sub:`B`| as in (e); N = 13 192, R² = 0.54, RMSE = 0.79 m,
+   MAE = 0.58 m, Bias = −0.05 m. Background imagery: © Google, © Maxar Technologies.
+
+The shallow reef platform (< 2 m) and the surrounding deeper water (> 4 m) are broadly
+reproduced in spatial configuration; the inner reef platform and the reef rim are captured in both
+maps. Panel (b) shows spatially coherent gaps where depths exceed the 10 m retrieval limit.
+
+- **Overestimation** is concentrated at the outer reef rim and around the island and the shallow
+  channel networks: their sub-pixel structure cannot be resolved at 30 m resolution, and mixed
+  land–water pixels (persisting despite MNDWI masking) and narrow channels cause spectral
+  contamination. Extreme relative differences occur where the reference depth is very small.
+- **Underestimation** is slight across the broader inner reef. Wave breaking along the reef crest
+  produces bright whitecaps that the inversion interprets like bottom reflectance from a very
+  shallow, bright substrate, driving the estimate towards the lower bound near the breaking zone.
+- Large absolute errors (> 2 m) are concentrated along the reef rim and at the deeper northern
+  margin; the ±1 m band in the parity plot (f) is regularly exceeded beyond ≈ 4 m, consistent with
+  the transition depth of 4.92–6.38 m.
+
+See :doc:`results` for the comparison with the EOMAP product.
+
+.. todo:: Add the link to the results dataset (DOI).
