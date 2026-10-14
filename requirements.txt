@@ -1,7 +1,2 @@
 sphinx
 sphinx-rtd-theme
-nbsphinx
-ipykernel
-matplotlib
-numpy
-pandas

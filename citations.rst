@@ -6,6 +6,12 @@ Satellite Estimation of Chlorophyll-a Using Moderate Resolution Imaging Spectror
 (MODIS) Sensor in Shallow Coastal Water Bodies: Validation and Improvement.
 *Water*, 11(8), 1621. https://doi.org/10.3390/w11081621
 
+Albert, A., and Mobley, C. D. (2003).
+An analytical model for subsurface irradiance and remote sensing reflectance in deep and
+shallow case-2 waters.
+*Optics Express*, 11(22), 2873–2890.
+https://doi.org/10.1364/OE.11.002873
+
 Albert, A. (2004).
 *Inversion Techniques for Optical Remote Sensing in Shallow Water* (Doctoral dissertation).
 Universität Hamburg.
@@ -21,6 +27,11 @@ Factors affecting the measurement of CDOM by remote sensing of optically complex
 waters.
 *Remote Sensing of Environment*, 157, 199–215.
 https://doi.org/10.1016/j.rse.2014.04.033
+
+Buiteveld, H., Hakvoort, J. H. M., and Donze, M. (1994).
+The optical properties of pure water.
+In *Ocean Optics XII*, SPIE Vol. 2258, 174–183.
+https://doi.org/10.1117/12.190060
 
 Chénier, R., Faucher, M., and Ahola, R. (2018).
 Satellite-Derived Bathymetry for Improving Canadian Hydrographic Service Charts.
@@ -60,17 +71,31 @@ Gege, P. (1994).
 (Doctoral dissertation).
 Ludwig-Maximilians-Universität München.
 
+Harris, D. L., et al. (2023).
+One Tree Reef topographic and bathymetric lidar digital elevation model (2018) and
+roughness equivalent habitat data (2023). PANGAEA.
+https://doi.org/10.1594/PANGAEA.963918
+
 Hartmann, K., Kelbe, D. R., and Cilliers, D. (2021).
 Physics-based satellite-derived bathymetry (SDB) using radiative transfer model (RTM)
 inversion.
 *Remote Sensing of Environment*, 258, 112366.
 https://doi.org/10.1016/j.rse.2021.112366
 
+Gege, P. (2005).
+*The Water Colour Simulator WASI — User Manual for Version 3*. DLR Report,
+German Aerospace Center, Oberpfaffenhofen.
+https://elib.dlr.de/19338/1/WASI_manual_v3.pdf
+
 He, J., Lin, J., Ma, M., and Liao, X. (2024).
 Mapping topo-bathymetry of transparent tufa lakes using UAV-based photogrammetry and
 bathymetric LiDAR.
 *Remote Sensing of Environment*, 291, 113555.
 https://doi.org/10.1016/j.rse.2023.113555
+
+Internationale Gewässerschutzkommission für den Bodensee (IGKB). (2015).
+IGKB-Tiefenschärfe-Bodensee: digitale Geländemodelle mit 10 m und 3 m Auflösung. PANGAEA.
+https://doi.org/10.1594/PANGAEA.855987
 
 Kalybekova, A. (2025).
 Satellite-Derived Bathymetry: A Review of Methods and Applications.
@@ -144,19 +169,13 @@ Satellite-derived shallow-water bathymetry using a multi-temporal approach.
 *International Journal of Remote Sensing*, 37(23), 5694–5714.
 https://doi.org/10.1080/01431161.2016.1249307
 
-Wei, J., Lee, Z., and Shang, S. (2022).
+Wei, J., Lee, Z., and Shang, S. (2016).
 A system to measure the data quality of spectral remote-sensing reflectance of aquatic
 environments.
 *Journal of Geophysical Research: Oceans*, 121(11), 8189–8207.
 https://doi.org/10.1002/2016JC012126
 
-Wong, C. Y. S., D'Odorico, P., Bhattacharjee, S., and Gamon, J. A. (2020).
-Spectral irradiance affects the relationships between leaf colour, chlorophyll and
-leaf N, P.
-*Remote Sensing*, 12(12), 2006.
-https://doi.org/10.3390/rs12122006
-
-Xu, N., Ma, X., Ma, Y., Zhao, P., Yang, J., Wang, X. H., and Tian, S. (2023).
+Xu, N., Ma, X., Ma, Y., Zhao, P., Yang, J., Wang, X. H., and Tian, S. (2021).
 Deriving Highly Accurate Shallow Water Bathymetry From Sentinel-2 and ICESat-2 Datasets
 by a Multitemporal Stacking Method.
 *IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing*,

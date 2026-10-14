@@ -129,16 +129,6 @@ where :math:`DN_i` is the recorded digital number for band :math:`i`.
 Level-2 products (atmospherically corrected) are produced using the LaSRC algorithm
 developed by USGS/NASA (U.S. Geological Survey, 2025).
 
-Sentinel-2
-^^^^^^^^^^
-
-The Sentinel-2 constellation (ESA Copernicus Programme) operates two satellites
-(2A and 2B, plus 2C since 2024), each carrying the MultiSpectral Instrument (MSI)
-with 13 spectral bands. Spatial resolution is 10 m, 20 m or 60 m depending on the band;
-temporal resolution is 5 days at the equator (European Space Agency, 2025a, 2025b).
-While Sentinel-2 offers finer spatial and spectral detail, Landsat 8 has been shown to
-produce more consistent bathymetric results in cross-sensor comparisons and is therefore
-the primary sensor in Cassandra Gemini.
 
 Optical Properties of Water Bodies
 -----------------------------------

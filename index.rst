@@ -35,18 +35,20 @@ covering contrasting water clarity conditions:
 
 This documentation covers the theoretical background, the processing
 workflow, and a step-by-step guide to running the pipeline in
-``SDB.ipynb``.
+``CassandraGemini.ipynb``.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   tes
+   installation
+   theory
    methods
    code
    bsp1
    bsp2
-   citations.rst
+   citations
+   about
 
 
 

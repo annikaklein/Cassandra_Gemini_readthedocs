@@ -1,7 +1,7 @@
 Code Application
 ================
 
-SDB.ipynb
+CassandraGemini.ipynb
 ---------
 
 Configuration
@@ -9,9 +9,9 @@ Configuration
 
 Before running the pipeline, all user-defined parameters must be set
 in the configuration cell. The pipeline follows the processing structure
-shown in Figure x, proceeding from preprocessing through water depth
-estimation, water constituent retrieval, parameter optimization, and
-tide correction.
+described in :doc:`methods`, proceeding from preprocessing through water depth
+estimation, water constituent retrieval, and parameter optimisation. Water level
+correction is applied externally afterwards.
 
 Quick Start
 ^^^^^^^^^^^
@@ -19,14 +19,14 @@ Quick Start
 .. code-block:: python
 
    mission      = "Landsat"
-   data_source  = "gee"
-   startdate    = "2014-03-15"
-   enddate      = "2014-04-30"
-   TARGET_SCALE = 10
+   data_source  = "gee"          # or "local"
+   startdate    = "2014-03-20"
+   enddate      = "2014-03-31"
+   TARGET_SCALE = 30
    PLOT_BANDS   = True
-   CX_METHOD    = "albert"
-   CP_METHOD    = "ficek"
-   AY_METHOD    = "wong"
+   CX_METHOD    = "E1"           # TSM:  "E1" (Ficek) | "E2" (Parwati)
+   CP_METHOD    = "A"            # Chl-a: "A" (Albert) | "E2" (Abbas)
+   AY_METHOD    = "A"            # CDOM:  "A" (Albert) | "E1" (Ficek)
 
 Parameters
 ^^^^^^^^^^
@@ -71,10 +71,6 @@ Defines how satellite imagery is loaded.
 Date range for image search. Only relevant if ``data_source == "gee"``.
 Format: ``YYYY-MM-DD``
 
-.. note::
-   Scenes are filtered to minimize temporal distance to in-situ reference
-   measurements. See Section 5.1 for details on scene selection criteria.
-
 ----
 
 ``TARGET_SCALE``
@@ -83,7 +79,7 @@ Format: ``YYYY-MM-DD``
 Target pixel size in metres. Images are resampled to this resolution
 via bilinear interpolation.
 
-**Default:** ``10``
+**Default:** ``30`` (native Landsat 8 OLI resolution)
 
 ----
 
@@ -105,16 +101,14 @@ Method used to estimate Total Suspended Matter concentration *C*\ :sub:`X`
 
 .. list-table::
    :header-rows: 1
-   :widths: 25 75
+   :widths: 20 80
 
    * - Value
-     - Reference
-   * - ``"albert"``
-     - Albert (2004)
-   * - ``"ficek"``
-     - Ficek et al. (2011)
-   * - ``"parwarti"``
-     - Parwati et al. (2022)
+     - Method
+   * - ``"E1"``
+     - Empirical, Ficek et al. (2011) (``compute_cx_cspm_for_all_images``)
+   * - ``"E2"``
+     - Empirical, Parwati et al. (2023) (``compute_cx_tss_for_all_images``)
 
 ----
 
@@ -126,16 +120,14 @@ Method used to estimate Phytoplankton Chlorophyll-a concentration *C*\ :sub:`P`
 
 .. list-table::
    :header-rows: 1
-   :widths: 25 75
+   :widths: 20 80
 
    * - Value
-     - Reference
-   * - ``"albert"``
-     - Albert (2004)
-   * - ``"ficek"``
-     - Ficek et al. (2011)
-   * - ``"abbas"``
-     - Abbas et al. (2019)
+     - Method
+   * - ``"A"``
+     - Albert (2004): joint inversion with CDOM (Step 2.3c)
+   * - ``"E2"``
+     - Empirical, Abbas et al. (2019), GROC-4 (``compute_cp_abbas_groc4_for_all_images``)
 
 ----
 
@@ -147,16 +139,14 @@ Method used to estimate CDOM absorption *a*\ :sub:`Y`\ (λ\ :sub:`0`\ )
 
 .. list-table::
    :header-rows: 1
-   :widths: 25 75
+   :widths: 20 80
 
    * - Value
-     - Reference
-   * - ``"albert"``
-     - Albert (2004)
-   * - ``"ficek"``
-     - Ficek et al. (2011)
-   * - ``"wong"``
-     - Wong et al. (2019)
+     - Method
+   * - ``"A"``
+     - Albert (2004): joint inversion with Chl-a (Step 2.3c)
+   * - ``"E1"``
+     - Empirical, Ficek et al. (2011) (``compute_cdom_for_all_images``)
 
 ----
 
@@ -266,7 +256,7 @@ sunglint correction. In GEE mode, this cell is skipped (handled separately).
 3. **Metadata enrichment:** Extracts solar and sensor angles from the MTL XML metadata files.
 4. **Water masking:** Computes MNDWI per scene and derives a binary water mask using ``mndwi_threshold``.
 5. **Value policy:** Sets pixels below ``MIN_VALID_VALUE`` (0.005) or outside the water mask to NaN, depending on the band.
-6. **Sunglint correction:** Applies a linear regression between SWIR and visible bands over optically deep water to remove sunglint artefacts (see Eq. 4).
+6. **Sunglint correction:** Applies a linear regression between SWIR and visible bands over optically deep water to remove sunglint artefacts .
 7. **NaN reapplication:** Ensures that pixels masked before correction remain masked after correction.
 8. **Plotting:** Displays MNDWI map, water mask, pre-correction R\ :sub:`rs` per band, and sunglint-corrected R\ :sub:`rs` per band.
 
@@ -449,7 +439,7 @@ Step 0f – Sunglint Correction: Deep Water Reference Area
 
 Displays the selected scenes on an interactive map so the user can draw
 a deep water polygon. This polygon defines the homogeneous, optically deep
-reference area used for the sunglint linear regression (Eq. 4).
+reference area used for the sunglint linear regression.
 Only executed in GEE mode; in local mode the reference area is defined
 via ``sample_polygon`` in Step 0.
 
@@ -525,7 +515,7 @@ Step 0h – Sunglint Correction: Apply to All Scenes (GEE)
 Runs the full sunglint correction pipeline across all selected scenes.
 For each scene, a linear regression is fitted between the SWIR band and
 each visible band over the deep water reference polygon, and the correction
-is applied following Eq. 4. Only executed in GEE mode.
+is applied. Only executed in GEE mode.
 
 .. code-block:: python
 
@@ -538,15 +528,15 @@ is applied following Eq. 4. Only executed in GEE mode.
            bands=bands_used,
            sample_polygon=sample_polygon,
            apply_sunglint=True,
-           mndwi_threshold=0.75,
+           mndwi_threshold=0.0,
            ...
        )
 
 **What this cell does:**
 
-1. **Water masking:** Computes MNDWI per scene using ``mndwi_threshold = 0.75`` and derives binary water masks.
+1. **Water masking:** Computes MNDWI per scene using ``mndwi_threshold = 0.0`` and derives binary water masks.
 2. **Sunglint regression:** Fits a linear regression between the SWIR band and each visible band over the deep water reference polygon.
-3. **Correction:** Applies the regression to subtract the sunglint contribution from each visible band (Eq. 4).
+3. **Correction:** Applies the regression to subtract the sunglint contribution from each visible band.
 4. **Plotting:** Optionally plots corrected *R*\ :sub:`rs` per band (``plot_corrected_masked``) and MNDWI/water mask grids (``plot_mndwi_grid``).
 
 **Outputs:**
@@ -577,7 +567,7 @@ is applied following Eq. 4. Only executed in GEE mode.
      - ``True``
      - Set to ``False`` to skip correction and pass images through unchanged
    * - ``mndwi_threshold``
-     - ``0.75``
+     - ``0.0``
      - MNDWI threshold for water masking during correction
    * - ``set_nonpositive_to_nan``
      - ``False``
@@ -585,89 +575,6 @@ is applied following Eq. 4. Only executed in GEE mode.
 
 ----
 
-
-Step 1 – Empirical Coefficients & Metadata
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-1.1 Empirical Coefficients & Backscattering Albedo ω\ :sub:`b`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Loads physics-based empirical coefficients from ``parameters.py`` and
-extracts scene metadata (solar angles) from the selected images.
-Only the GEE branch is shown here; in local mode both are handled in Step 0.
-
-.. code-block:: python
-
-   # Coefficients
-   band_wavelengths, empirical_coefficients = sdb.load_empirical_coefficients(
-       parameters, mission
-   )
-   coef_lookup = sdb.build_coeff_lookup(empirical_coefficients, mission)
-
-   # Metadata
-   metadata_dict = {}
-   for i, img in enumerate(selected_images_list):
-       metadata_dict[f"Image_{i+1}"] = sdb.extract_metadata_solar_only(img)
-
-**What this cell does:**
-
-1. **Empirical coefficients:** Loads all physics-based model coefficients from ``parameters.py``, including backscattering albedo coefficients (*ars1*, *ars2*), subsurface reflectance model coefficients (*prs1–prs7*), and attenuation/backscattering coefficients (*ko*, *k1u*, *k2u*, *k1b*, *k2b*).
-2. **Coefficient lookup:** Builds a per-band dictionary (``coef_lookup``) for fast access during the retrieval steps.
-3. **Metadata extraction:** Extracts solar geometry (sun elevation, azimuth) from each GEE image via ``sdb.extract_metadata_solar_only()``. Required for angle conversion and attenuation correction.
-
-.. list-table:: Coefficient groups
-   :header-rows: 1
-   :widths: 25 75
-
-   * - Variables
-     - Description
-   * - ``ars1``, ``ars2``
-     - Backscattering albedo coefficients (Albert & Mobley 2003)
-   * - ``prs1``–``prs7``
-     - Subsurface reflectance model coefficients
-   * - ``ko``
-     - Pure water absorption coefficient
-   * - ``k1u``, ``k2u``
-     - Upwelling diffuse attenuation coefficients
-   * - ``k1b``, ``k2b``
-     - Bottom attenuation coefficients
-
-----
-1.1 Empirical Coefficients (Both Modes)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Loads all physics-based model coefficients from ``parameters.py``.
-This cell runs for both GEE and local mode.
-
-.. code-block:: python
-
-   # Backscattering albedo
-   ars1 = parameters.ars1
-   ars2 = parameters.ars2
-
-   # Subsurface reflectance model
-   prs1 = parameters.prs1
-   # ... prs2–prs7
-
-   # Attenuation coefficients
-   ko  = parameters.ko
-   k1u = parameters.k1w
-   k2u = parameters.k2w
-   k1b = parameters.k1b
-   k2b = parameters.k2b
-
-   band_wavelengths, empirical_coefficients = sdb.load_empirical_coefficients(
-       parameters, mission
-   )
-   coef_lookup = sdb.build_coeff_lookup(empirical_coefficients, mission)
-
-**What this cell does:**
-
-Reads all empirical constants from ``parameters.py`` into the notebook namespace
-and builds ``coef_lookup`` — a per-band dictionary used throughout Steps 2 and 3
-for fast coefficient access during the radiative transfer inversion.
-
-----
 
 Step 1 – Empirical Coefficients & Metadata
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -684,15 +591,13 @@ Step 1 – Empirical Coefficients & Metadata
      - Loaded here (both modes)
    * - **Metadata & angles**
      - Already extracted in Step 0 via ``enrich_metadata_dict_with_angles_local()``
-     - Extracted here via ``extract_metadata_solar_only()``
-
-----
+     - Extracted in Step 1.2 via ``extract_metadata_solar_only()``
 
 1.1 Empirical Coefficients (Both Modes)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Loads all physics-based model coefficients from ``parameters.py``.
-Runs for both GEE and local mode.
+Loads all physics-based model coefficients from ``parameters.py`` and builds
+``coef_lookup`` — a per-band dictionary used throughout Steps 2 and 3.
 
 .. code-block:: python
 
@@ -710,12 +615,6 @@ Runs for both GEE and local mode.
    )
    coef_lookup = sdb.build_coeff_lookup(empirical_coefficients, mission)
 
-**What this cell does:**
-
-Reads all empirical constants from ``parameters.py`` into the notebook namespace
-and builds ``coef_lookup`` — a per-band dictionary used throughout Steps 2 and 3
-for fast coefficient access during the radiative transfer inversion.
-
 .. list-table:: Coefficient groups
    :header-rows: 1
    :widths: 25 75
@@ -723,15 +622,15 @@ for fast coefficient access during the radiative transfer inversion.
    * - Variables
      - Description
    * - ``ars1``, ``ars2``
-     - Backscattering albedo coefficients (Albert & Mobley 2003)
+     - Empirical coefficients *A*\ :sub:`rs,1`, *A*\ :sub:`rs,2` of the subsurface reflectance model (Albert 2004)
    * - ``prs1``–``prs7``
-     - Subsurface reflectance model coefficients
+     - Empirical coefficients for the deep-water reflectance *R*\ :sub:`rs,∞` (Albert 2004)
    * - ``ko``
-     - Pure water absorption coefficient
+     - Empirical coefficient κ\ :sub:`0` in the diffuse attenuation coefficient *K*\ :sub:`d`
    * - ``k1u``, ``k2u``
-     - Upwelling diffuse attenuation coefficients
+     - Empirical coefficients for the upwelling attenuation *K*\ :sub:`u` (``k1w``, ``k2w`` in ``parameters.py``)
    * - ``k1b``, ``k2b``
-     - Bottom attenuation coefficients
+     - Empirical coefficients for the bottom attenuation *K*\ :sub:`b`
 
 ----
 
@@ -785,7 +684,7 @@ local mode.
 
 1. **Backscattering albedo ω\ :sub:`b`:** Computes *w = bbw / (aw + bbw)* per band from pure water absorption (*aw*) and backscattering (*bbw*) coefficients. Bands with missing or invalid coefficients are skipped.
 
-2. **Deep water reflectance R\ :sub:`rs,∞`:** Calculates the reflectance of optically deep water (no bottom contribution) per image and band using the subsurface reflectance model (Albert & Mobley 2003). Requires solar zenith (*θ*\ :sub:`s`) and sensor viewing angle (*θ*\ :sub:`v`) from the scene metadata.
+2. **Deep water reflectance R\ :sub:`rs,∞`:** Calculates the reflectance of optically deep water (no bottom contribution) per image and band using the subsurface reflectance model (Albert 2004). Requires solar zenith (*θ*\ :sub:`s`) and sensor viewing angle (*θ*\ :sub:`v`) from the scene metadata.
 
 3. **Diffuse attenuation coefficient K\ :sub:`d`:** Computes how quickly downwelling light is attenuated with depth, as a function of pure water optical properties and solar zenith angle.
 
@@ -845,13 +744,12 @@ Runs for both GEE and local mode.
        extent=extent_bands,
        USE_SINGLE_BAND=True,
        SINGLE_BAND_NAME="SR_B4",
-       PLOT_MOSAIC=True,
-       TITLE_PREFIX="Input Mosaic Depth | SR_B4 only"
+       PLOT_MOSAIC=True
    )
 
 **What this cell does:**
 
-1. **Band-wise depth retrieval:** Inverts the radiative transfer model (Eq. 8) per pixel and band using *K*\ :sub:`d`, *R*\ :sub:`rs,∞`, and *ω*\ :sub:`b` from Step 1.3. Band-level plots skipped (``plot=False``).
+1. **Band-wise depth retrieval:** Inverts the radiative transfer model per pixel and band using *K*\ :sub:`d`, *R*\ :sub:`rs,∞`, and *ω*\ :sub:`b` from Step 1.3. Band-level plots skipped (``plot=False``).
 2. **Depth mosaic:** Builds the final depth map. Currently SR_B4 only (``USE_SINGLE_BAND=True``).
 
 .. list-table:: Available mosaic strategies
@@ -863,7 +761,7 @@ Runs for both GEE and local mode.
    * - **Single band** *(current)*
      - Uses only one band. Set ``USE_SINGLE_BAND=True``, ``SINGLE_BAND_NAME="SR_B4"``.
    * - Hard-cut mosaic
-     - SR_B4 up to ``SWITCH_DEPTH``, then SR_B3. Set ``USE_HARD_CUT=True``.
+     - SR_B4 up to ``SWITCH_DEPTH_LANDSAT`` (default 5 m), then SR_B3. Set ``USE_HARD_CUT=True`` (default in ``SDB.py``).
    * - Smooth blend
      - Blends SR_B4→SR_B3 across ``[BLEND_START, BLEND_END]``. Set ``USE_SMOOTH_BLEND=True``.
 
@@ -888,40 +786,13 @@ Runs for both GEE and local mode.
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Computes the Total Suspended Matter (TSM) concentration *C*\ :sub:`X`
-per pixel for all scenes. Three methods are supported, selected via
-``CX_METHOD`` in the configuration cell. Runs for both GEE and local mode.
+per pixel for all scenes. Two empirical methods are available, selected via
+``CX_METHOD``. Runs for both GEE and local mode.
 
 .. code-block:: python
 
-   # --- SELECT METHOD AND COMPUTE C_X ---
-   if CX_METHOD == "albert":
-       # Albert & Mobley (2003): physics-based retrieval using reflectance
-       # above water (R_u), spectral shape functions (f_arrow), and
-       # empirical coefficients. Requires depth, K_d, R_rs∞, and ω_b.
-       Cx_results = []
-       Cx_results = sdb.compute_cx_for_all_images(
-           mission=mission,
-           all_corrected_images=all_corrected_images,
-           depth_mosaic_results=depth_mosaic_results,
-           metadata_dict=metadata_dict,
-           empirical_coefficients=empirical_coefficients,
-           kd_df=kd_df,
-           region=region,
-           results_w=results_w,
-           rrs_infinity_results=rrs_infinity_results,
-           calculate_f_arrow=sdb.calculate_f_arrow,
-           calculate_f_arrow_land=sdb.calculate_f_arrow_land,
-           calculate_R_u=sdb.calculate_R_u,
-           calculate_Cx=sdb.calculate_Cx,
-           ars1=ars1,
-           ars2=ars2,
-           plot_ru=True,       # plot above-water reflectance R_u
-           plot_cx=True,       # plot C_X concentration map
-           plot_contours=True, # overlay depth contours on C_X plot
-       )
-   elif CX_METHOD == "parwarti":
-       # Parwati et al. (2022): empirical band-ratio method (no depth needed)
-       Cx_results = []
+   if CX_METHOD == "E2":
+       # Parwati et al. (2023): empirical TSS model
        Cx_results = sdb.compute_cx_tss_for_all_images(
            mission=mission,
            all_corrected_images=all_corrected_images,
@@ -929,9 +800,8 @@ per pixel for all scenes. Three methods are supported, selected via
            plot=True,
            plot_contours=True,
        )
-   elif CX_METHOD == "ficek":
-       # Ficek et al. (2011): empirical formula calibrated for Baltic Sea waters
-       Cx_results = []
+   elif CX_METHOD == "E1":
+       # Ficek et al. (2011): C_X = 5590 * R_rs(798)^0.95
        Cx_results = sdb.compute_cx_cspm_for_all_images(
            mission=mission,
            all_corrected_images=all_corrected_images,
@@ -942,42 +812,30 @@ per pixel for all scenes. Three methods are supported, selected via
    else:
        raise ValueError(f"Unknown CX_METHOD: {CX_METHOD}")
 
-   # --- POST-PROCESSING ---
-   # Replace NaN with 0 and cap at 200 g/m³ to remove outliers / land artefacts
+   # Post-processing: replace NaN with 0
    for entry in Cx_results:
        arr = entry["C_X"]
        arr[np.isnan(arr)] = 0
-       arr[arr >= 200] = 200
        entry["C_X"] = arr
-
-   print("✅ Cx_results:", len(Cx_results))
-
-   # Store result as list of dicts (consistent format with depth_mosaic_results)
-   Cx_results.append({"Image": 1, "C_X": Cx_results})
 
 **What this cell does:**
 
-Retrieves the TSM concentration *C*\ :sub:`X` [g m\ :sup:`-3`] per pixel
-using the method specified by ``CX_METHOD``. After retrieval, NaN pixels are
-set to 0 and values ≥ 200 g m\ :sup:`-3` are capped to suppress land
-artefacts and extreme outliers.
+Retrieves the TSM concentration *C*\ :sub:`X` [g m\ :sup:`-3`] per pixel and
+replaces NaN pixels by 0. The result serves as initial estimate in Step 3.1.
 
 .. list-table:: Method comparison
    :header-rows: 1
-   :widths: 20 20 60
+   :widths: 20 25 55
 
    * - ``CX_METHOD``
      - Reference
      - Description
-   * - ``"albert"``
-     - Albert & Mobley (2003)
-     - Physics-based; uses *R*\ :sub:`u`, spectral shape functions, *K*\ :sub:`d`, *R*\ :sub:`rs,∞`, *ω*\ :sub:`b`. Most inputs required.
-   * - ``"parwarti"``
-     - Parwati et al. (2022)
-     - Empirical band-ratio method. No depth or optical parameters needed.
-   * - ``"ficek"``
+   * - ``"E1"``
      - Ficek et al. (2011)
-     - Empirical formula; calibrated for Baltic Sea waters.
+     - Empirical power law on the NIR reflectance.
+   * - ``"E2"``
+     - Parwati et al. (2023)
+     - Empirical model for turbid coastal water.
 
 .. list-table:: Outputs
    :header-rows: 1
@@ -986,33 +844,44 @@ artefacts and extreme outliers.
    * - Variable
      - Description
    * - ``Cx_results``
-     - List of dicts with key ``"C_X"`` (2D float32 array [g m\ :sup:`-3`]) per scene
+     - List of dicts with keys ``"Image"`` and ``"C_X"`` (2D float32 [g m\ :sup:`-3`]) per scene
 
 ----
 
 2.3 Phytoplankton Chlorophyll-a and CDOM
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Computes the phytoplankton Chlorophyll-a concentration *C*\ :sub:`a`
-per pixel for all scenes. The method is selected via ``CP_METHOD`` in
-the configuration cell. Runs for both GEE and local mode.
+Chlorophyll-a (*C*\ :sub:`P`) and CDOM (*a*\ :sub:`Y`) are retrieved either
+empirically (``"E1"``/``"E2"``) or jointly with the Albert (2004) inversion
+(``"A"``, Step 2.3c). If ``"A"`` is chosen for either parameter, Step 2.3c is
+executed and overwrites the results of Steps 2.3 and 2.3b.
+
+.. list-table:: Methods
+   :header-rows: 1
+   :widths: 20 20 20 40
+
+   * - Parameter
+     - ``"A"``
+     - ``"E1"``
+     - ``"E2"``
+   * - ``CP_METHOD``
+     - Albert (2004)
+     - —
+     - Abbas et al. (2019), GROC-4
+   * - ``AY_METHOD``
+     - Albert (2004)
+     - Ficek et al. (2011)
+     - —
+
+2.3a – Chlorophyll-a (``CP_METHOD == "E2"``)
+"""""""""""""""""""""""""""""""""""""""""""""
 
 .. code-block:: python
 
-   # --- SELECT METHOD AND COMPUTE C_P (Chlorophyll-a) ---
    Chl_results = []
 
-   if CP_METHOD == "ficek":
-       # Ficek et al. (2011): empirical formula calibrated for Baltic Sea waters
-       CP_results = sdb.compute_cp_ficek_for_all_images(
-           mission=mission,
-           all_corrected_images=all_corrected_images,
-           region=region,
-           plot=True,
-           verbose=True,
-       )
-   elif CP_METHOD == "abbas":
-       # Abbas et al. (2019): GROC-4 algorithm for phytoplankton Chl-a retrieval
+   if CP_METHOD == "E2":
+       # Abbas et al. (2019): GROC-4 algorithm
        CP_results = sdb.compute_cp_abbas_groc4_for_all_images(
            mission=mission,
            all_corrected_images=all_corrected_images,
@@ -1020,142 +889,53 @@ the configuration cell. Runs for both GEE and local mode.
            plot=True,
            verbose=True,
        )
-   else:
-       raise ValueError(CP_METHOD)
+       for entry in CP_results:
+           arr = entry["C_P"]
+           arr[np.isnan(arr)] = 0
+           entry["C_P"] = arr
+           Chl_results.append({"Image": entry["Image"], "C_a": entry["C_P"]})
 
-   # --- POST-PROCESSING ---
-   # Replace NaN with 0 (no upper cap needed for Chl-a)
-   for entry in CP_results:
-       arr = entry["C_P"]
-       arr[np.isnan(arr)] = 0
-       entry["C_P"] = arr
+Retrieves *C*\ :sub:`a` [µg L\ :sup:`-1`]; NaN pixels are set to 0 and the result
+is stored under the key ``"C_a"``.
 
-   # Rename C_P → C_a (chlorophyll-a) for consistent downstream naming
-   for entry in CP_results:
-       Chl_results.append({
-           "Image": entry["Image"],
-           "C_a": entry["C_P"]
-       })
-
-   print("✅ Chl_results:", len(Chl_results))
-
-**What this cell does:**
-
-Retrieves Chlorophyll-a concentration *C*\ :sub:`a` [µg L\ :sup:`-1`]
-per pixel using the method specified by ``CP_METHOD``. NaN pixels are
-set to 0. The result is stored under the key ``"C_a"`` for consistent
-naming in downstream steps.
-
-.. list-table:: Method comparison (``CP_METHOD``)
-   :header-rows: 1
-   :widths: 20 20 60
-
-   * - Value
-     - Reference
-     - Description
-   * - ``"ficek"``
-     - Ficek et al. (2011)
-     - Empirical formula; calibrated for Baltic Sea waters.
-   * - ``"abbas"``
-     - Abbas et al. (2019)
-     - GROC-4 algorithm for phytoplankton Chl-a retrieval.
-
-----
-
-2.3b – CDOM Absorption Coefficient *a*\ :sub:`Y`\ (λ₀)
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-Computes *a*\ :sub:`Y`\ (λ₀) [m\ :sup:`-1`] per pixel using an empirical or
-semi-analytical method (``ficek`` or ``wong``). Run this cell when
-``AY_METHOD`` is **not** ``"albert"``; for the Albert case, use Step 2.3c instead.
+2.3b – CDOM Absorption (``AY_METHOD == "E1"``)
+""""""""""""""""""""""""""""""""""""""""""""""""
 
 .. code-block:: python
 
-   # STEP 2.3b – CDOM ABSORPTION COEFFICIENT a_Y(λ₀)
-   # Run when AY_METHOD is "ficek" or "wong".
    a_CDOM_results_alt = []
 
-   if AY_METHOD == "ficek":
-       # Ficek et al. (2011): empirical model calibrated for Baltic Sea waters
+   if AY_METHOD == "E1":
+       # Ficek et al. (2011): empirical model
        aY_results = sdb.compute_cdom_for_all_images(
            mission=mission,
            all_corrected_images=all_corrected_images,
            region=region,
            plot=True,
-           landsat_min_clip=0.1,  # clip low reflectances before inversion
+           landsat_min_clip=0.1,
        )
-   elif AY_METHOD == "wong":
-       # Wong et al. (2019): semi-analytical a_Y retrieval
-       aY_results = sdb.compute_ay_wong_for_all_images(
-           mission=mission,
-           all_corrected_images=all_corrected_images,
-           region=region,
-           plot=True,
-           plot_contours=True,
-           clip_aY=(0.0, 5.0),  # constrain to physically plausible range [m⁻¹]
-       )
-   else:
-       raise ValueError(f"Unknown AY_METHOD: {AY_METHOD}")
+       for entry in aY_results:
+           arr = entry["a_CDOM"]
+           arr[np.isnan(arr)] = 0
+           entry["a_CDOM"] = arr
+           a_CDOM_results_alt.append({"Image": entry["Image"], "a_CDOM": arr})
 
-   # Replace NaN with 0
-   for entry in aY_results:
-       arr = entry["a_CDOM"]
-       arr[np.isnan(arr)] = 0
-       entry["a_CDOM"] = arr
-
-   # Store in unified output format
-   for entry in aY_results:
-       a_CDOM_results_alt.append({
-           "Image": entry["Image"],
-           "a_CDOM": entry["a_CDOM"]
-       })
-
-   print("✅ a_CDOM_results:", len(a_CDOM_results_alt))
-
-**What this cell does:**
-
-Retrieves the CDOM absorption coefficient *a*\ :sub:`Y`\ (λ₀) per pixel using
-the method set by ``AY_METHOD``. NaN values are replaced with 0.
-
-.. list-table:: Method comparison (``AY_METHOD``)
-   :header-rows: 1
-   :widths: 20 20 60
-
-   * - Value
-     - Reference
-     - Description
-   * - ``"ficek"``
-     - Ficek et al. (2011)
-     - Empirical model; calibrated for Baltic Sea waters.
-   * - ``"wong"``
-     - Wong et al. (2019)
-     - Semi-analytical retrieval; clipped to [0, 5] m\ :sup:`-1`.
-
-.. list-table:: Outputs
-   :header-rows: 1
-   :widths: 25 75
-
-   * - Variable
-     - Description
-   * - ``a_CDOM_results_alt``
-     - List of dicts with keys ``"Image"`` and ``"a_CDOM"`` (2D float32 [m\ :sup:`-1`]) per scene
-
-----
+Retrieves *a*\ :sub:`Y`\ (λ₀) [m\ :sup:`-1`]; NaN values are replaced by 0.
 
 2.3c – Albert Joint Inversion (*C*\ :sub:`P` + *a*\ :sub:`Y`)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-Run this cell when ``AY_METHOD == "albert"`` **or** ``CP_METHOD == "albert"``.
+Run this cell when ``AY_METHOD == "A"`` **or** ``CP_METHOD == "A"``.
 Simultaneously retrieves *C*\ :sub:`P` (Chl-a) and *a*\ :sub:`Y`\ (λ₀) (CDOM)
-via pixel-wise optimisation of the full radiative transfer model (Albert & Mobley 2003).
+via pixel-wise optimisation of the full radiative transfer model (Albert 2004).
 **Overwrites** ``Chl_results`` (from Step 2.3) and ``a_CDOM_results_alt`` (from Step 2.3b).
 
 .. code-block:: python
 
    # STEP 2.3c – ALBERT JOINT INVERSION: C_P (Chl-a) + a_Y(λ₀) (CDOM)
-   # Run when AY_METHOD == "albert" OR CP_METHOD == "albert".
+   # Run when AY_METHOD == "A" OR CP_METHOD == "A".
    # Overwrites Chl_results and a_CDOM_results_alt.
-   if AY_METHOD == "albert" or CP_METHOD == "albert":
+   if AY_METHOD == "A" or CP_METHOD == "A":
        Chl_results = []
        a_CDOM_results_alt = []
 
@@ -1177,7 +957,7 @@ via pixel-wise optimisation of the full radiative transfer model (Albert & Moble
        )
 
        # Step 2: decompose a(λ) into C_P (Chl-a) and a_Y(λ₀) (CDOM)
-       # using two-band approach from Albert & Mobley (2003)
+       # using two-band approach from Albert (2004)
        cp_ay_results = sdb.compute_cp_ay_albert_from_a_two_bands(
            mission=mission,
            a_results=a_results,
@@ -1236,99 +1016,6 @@ the most computationally expensive.
 
 Step 3 – Parameter Optimization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Not mandatory - Load & Align Reference Data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Loads in-situ reference measurements (depth, *C*\ :sub:`X`, *C*\ :sub:`P`,
-*a*\ :sub:`Y`) stored as GeoTIFFs and aligns them to the satellite image grid
-before parameter optimisation. Reprojects and resamples each file to
-``target_shape`` and ``extent_target`` via bilinear interpolation.
-
-.. code-block:: python
-
-   # STEP 3.0 – LOAD & ALIGN REFERENCE DATA (in-situ GeoTIFFs)
-   image_idx = 0  # index of the scene to use for optimisation
-
-   # Determine spatial extent — use extent_bands if available
-   if "extent_bands" in globals() and extent_bands is not None:
-       extent_target = extent_bands
-   elif "extent" in globals() and extent is not None:
-       extent_target = extent
-   else:
-       # Derive bounding box from GEE region geometry
-       coords = region.bounds().coordinates().getInfo()[0]
-       lon_min, lat_min = coords[0]
-       lon_max, lat_max = coords[2]
-       extent_target = [lon_min, lon_max, lat_min, lat_max]
-
-   # Reference band for pixel grid shape (B7: Sentinel, SR_B3: Landsat)
-   if mission == "Sentinel":
-       target_arr = np.squeeze(all_corrected_images[image_idx]["B7"])
-   else:
-       target_arr = np.squeeze(all_corrected_images[image_idx]["SR_B3"])
-   target_shape = target_arr.shape
-
-   print("✅ extent_target:", extent_target)
-   print("✅ target_shape:", target_shape)
-
-   # Reference GeoTIFFs (in-situ / validation dataset)
-   reference_paths = {
-       "depth": "/Users/.../Input/depth.tif",
-       "cx":    "/Users/.../Input/CXE1.tif",
-       "cp":    "/Users/.../Input/CPE1.tif",
-       "ay":    "/Users/.../Input/AYA.tif",
-   }
-
-   # Load and align each reference file to the satellite image grid
-   reference_data = {}
-   for key, path in reference_paths.items():
-       if os.path.exists(path):
-           reference_data[key] = match_reference_tiff_to_band_cx(
-               tiff_path=path,
-               extent_target_lonlat=extent_target,
-               target_shape=target_shape,
-               target_crs="EPSG:4326",
-               label=key,
-               plot=True,  # visual QA check
-           )
-       else:
-           print(f"❌ nicht gefunden: {key} -> {path}")
-           reference_data[key] = None
-
-   depth_e = reference_data["depth"]   # reference depth [m]
-   cx_r    = reference_data["cx"]      # reference TSM [g/m³]
-   cp_r    = reference_data["cp"]      # reference Chl-a [µg/L]
-   ay_r    = reference_data["ay"]      # reference CDOM [m⁻¹]
-
-**What this cell does:**
-
-Determines the target pixel grid (``extent_target``, ``target_shape``) from the
-corrected satellite image, then reprojects and resamples each reference GeoTIFF
-onto that grid using ``match_reference_tiff_to_band_cx()``. Missing files are
-logged and set to ``None``; ``plot=True`` produces an alignment QA plot per file.
-
-.. list-table:: Reference variables
-   :header-rows: 1
-   :widths: 15 20 65
-
-   * - Variable
-     - Parameter
-     - Description
-   * - ``depth_e``
-     - Water depth
-     - In-situ / bathymetric reference [m]; used to optimise SDB coefficients
-   * - ``cx_r``
-     - *C*\ :sub:`X`
-     - Reference TSM concentration [g m\ :sup:`-3`]
-   * - ``cp_r``
-     - *C*\ :sub:`P`
-     - Reference Chl-a concentration [µg L\ :sup:`-1`]
-   * - ``ay_r``
-     - *a*\ :sub:`Y`
-     - Reference CDOM absorption coefficient [m\ :sup:`-1`]
-
-----
 
 3.1 Parameter Optimisation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1411,7 +1098,7 @@ forward model. Uses the outputs of Steps 2.1–2.3 as initial estimates.
 **What this cell does:**
 
 Iterates over all images and bands. For each combination, ``optimize_one_band()``
-runs a pixel-wise non-linear optimisation of the Albert & Mobley RTM, using the
+runs a pixel-wise non-linear optimisation of the Albert RTM, using the
 outputs of Steps 2.1–2.3 as starting points. Results are stored in nested dicts
 ``{image_idx: {band: 2D array}}``.
 
@@ -1440,144 +1127,29 @@ outputs of Steps 2.1–2.3 as starting points. Results are stored in nested dict
 
 ----
 
-3.2 Results: Final Parameter Maps & Output Export
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+3.2 Results: Depth Map Export
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Configures the consolidation pipeline, visualises all optimised parameters
-per image and band (initial vs. optimised, delta maps), then calls
-``run_case_for_image()`` to apply the selected pipeline mode and save
-GeoTIFF outputs to disk.
+Selects the final water depth map *z*\ :sub:`B` (SR_B4, case ``B4`` / pipeline
+mode ``A``), saves it as GeoTIFF and displays it using the ``cmo.deep``
+colourmap.
 
 .. code-block:: python
 
-   # Colourmap and axis label per parameter
-   parameter_settings = {
-       "z_B":      {"cmap": cmocean.cm.deep,   "label": "m"},
-       "C_X":      {"cmap": cmocean.cm.matter, "label": "mg/l"},
-       "C_P":      {"cmap": cmocean.cm.algae,  "label": "µg/l"},
-       "a_Y(λ₀)":  {"cmap": cmocean.cm.turbid, "label": "m⁻¹"},
-       "R_B":      {"cmap": "inferno",         "label": "Reflektanz"},
-   }
-
-   # Link parameter names to optimised result dicts (from Step 3.1)
-   parameter_data = {
-       "z_B":      zB_all_bands,
-       "C_X":      CX_all_bands,
-       "C_P":      CP_all_bands,
-       "a_Y(λ₀)":  aY_all_bands,
-       "R_B":      Rb_all_bands,
-   }
-
-   OUTPUT_ROOT = "/Users/.../cassandra1_test"  # GeoTIFFs saved here
-
-   config = {
-       "CASE_MODE":     "mosaic",           # "B3" | "B4" | "mosaic"
-       "PIPELINE_MODE": "B",                # "A" | "B" | "C"
-       "CONS_BANDS":    ["SR_B3", "SR_B4"],
-       "B4_MAX_SHALLOW": 10.0,
-       "B3_MAX_DEEP":    15.0,
-       "DO_SEAM_SMOOTH_ZB": True,
-       "SEAM_SIGMA":    0.8,
-       "SEAM_WIDTH_PX": 8,
-       "DO_SMOOTH_WQ":  True,
-       "WQ_SIGMA":      0.8,
-       "BOTTOM_ENDMEMBER_KEYS":  ["Rb_sand", "Rb_ga", "Rb_ba", "Rb_ra"],
-       "BOTTOM_CLASS_NAMES":     ["sand", "ga", "ba", "ra"],
-       "BOTTOM_MIN_VALID_BANDS": 2,
-   }
-
-   SCENE_ID = sdb.get_scene_id_from_globals()
-
-   band_names_per_mission = {
-       "Landsat": ["SR_B1", "SR_B2", "SR_B3", "SR_B4", "SR_B5", "SR_B6"],
-   }
+   OUTPUT_ROOT = "/path/to/output"
 
    for image_idx in range(1, len(all_corrected_images) + 1):
        sdb.run_case_for_image(
            mission=mission,
            image_idx=image_idx,
            extent_plot=extent,
-           scene_id=SCENE_ID,
+           scene_id="1",
            output_root=OUTPUT_ROOT,
-           case_mode=config["CASE_MODE"],
-           pipeline_mode=config["PIPELINE_MODE"],
-           band_names_per_mission=band_names_per_mission,
            zB_all_bands=zB_all_bands,
-           CX_all_bands=CX_all_bands,
-           CP_all_bands=CP_all_bands,
-           aY_all_bands=aY_all_bands,
-           Rb_all_bands=Rb_all_bands,
-           empirical_coefficients=empirical_coefficients,
-           config=config,
        )
 
-**What this cell does:**
-
-Applies the configured consolidation pipeline to the optimised band-wise results
-and exports the final maps as GeoTIFFs. The behaviour is controlled by two keys:
-
-``CASE_MODE`` — how the final depth map *z*\ :sub:`B` is constructed:
-
-.. list-table::
-   :header-rows: 1
-   :widths: 15 85
-
-   * - Value
-     - Description
-   * - ``"B3"``
-     - SR_B3 only (green; suits moderate depths with low red-band attenuation).
-   * - ``"B4"``
-     - SR_B4 only (red; high sensitivity in very shallow water, strongly attenuated at depth).
-   * - ``"mosaic"``
-     - SR_B4 for *z* ≤ ``B4_MAX_SHALLOW``, SR_B3 for *z* ≥ ``B3_MAX_DEEP``, blended in between. Physically motivated best-of-both-bands approach.
-
-``PIPELINE_MODE`` — level of post-processing applied to band-wise results:
-
-.. list-table::
-   :header-rows: 1
-   :widths: 10 20 70
-
-   * - Value
-     - Name
-     - Description
-   * - ``"A"``
-     - Single-band output
-     - No consolidation, no smoothing. Suitable for spectral sensitivity analysis.
-   * - ``"B"``
-     - Multiband consolidation
-     - Results merged across ``CONS_BANDS`` (e.g. median or least-squares). Reduces band-specific noise.
-   * - ``"C"``
-     - Consolidation + smoothing
-     - As B, plus seam-aware Gaussian smoothing for depth (``SEAM_SIGMA``, ``SEAM_WIDTH_PX``) and NaN-aware Gaussian smoothing for water quality parameters (``WQ_SIGMA``).
-
-.. list-table:: Key config parameters
-   :header-rows: 1
-   :widths: 30 15 55
-
-   * - Key
-     - Default
-     - Description
-   * - ``CONS_BANDS``
-     - ``["SR_B3","SR_B4"]``
-     - Bands included in multiband consolidation (Modes B/C)
-   * - ``B4_MAX_SHALLOW``
-     - ``10.0``
-     - Maximum depth [m] at which SR_B4 is used in mosaic mode
-   * - ``B3_MAX_DEEP``
-     - ``15.0``
-     - Minimum depth [m] at which SR_B3 takes over in mosaic mode
-   * - ``SEAM_SIGMA``
-     - ``0.8``
-     - Gaussian sigma [px] for depth seam smoothing (Mode C)
-   * - ``SEAM_WIDTH_PX``
-     - ``8``
-     - Transition width [px] at the B4/B3 seam (Mode C)
-   * - ``WQ_SIGMA``
-     - ``0.8``
-     - Gaussian sigma [px] for water quality smoothing (Mode C)
-   * - ``BOTTOM_MIN_VALID_BANDS``
-     - ``2``
-     - Minimum number of bands required for a valid bottom classification pixel
+**Output:** ``<OUTPUT_ROOT>/<scene_id>/Image_<NN>/CASE_B4_A/zB.tif`` — single-band
+float32 GeoTIFF (EPSG:4326), water depth in metres, NaN = no data.
 
 ----
 
@@ -1623,7 +1195,7 @@ sdb.py
 ``sdb.py`` is the core module of the Cassandra Gemini framework. It contains
 the implementations of all formulas and algorithms applied throughout the
 pipeline — from preprocessing and radiative transfer inversion to parameter
-optimisation and output export. All functions used in ``SDB.ipynb`` are
+optimisation and output export. All functions used in ``CassandraGemini.ipynb`` are
 imported from this module at the start of the notebook.
 
 .. note::
@@ -1638,7 +1210,7 @@ parameters.py
 spectral properties required by the retrieval algorithms. The current
 implementation is calibrated for **Landsat 8 OLI**, including band-specific
 wavelengths, radiometric characteristics, and the empirical constants used
-in the Albert & Mobley (2003) radiative transfer model.
+in the Albert (2004) radiative transfer model.
 
 .. note::
    Detailed documentation for ``parameters.py`` is not published at this time.
