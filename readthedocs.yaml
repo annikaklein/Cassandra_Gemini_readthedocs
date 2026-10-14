@@ -4,6 +4,13 @@ build:
   os: ubuntu-24.04
   tools:
     python: "3.12"
+  apt_packages:
+    - texlive-latex-base
+    - texlive-latex-extra
+    - texlive-pictures
+    - texlive-fonts-recommended
+    - lmodern
+    - pdf2svg
 
 sphinx:
   configuration: conf.py

@@ -4,13 +4,12 @@ Installation
 Requirements
 ------------
 
-- Python 3.14 (tested)
+- Python 3.14 
 - Jupyter Notebook / JupyterLab
 - Packages: ``numpy``, ``scipy``, ``pandas``, ``matplotlib``, ``cmocean``, ``rasterio``, ``shapely``, ``pyproj``,
   ``scikit-learn``, ``earthengine-api``, ``geemap``
 - For ``data_source = "gee"``: a Google Earth Engine account
 
-.. todo:: Add ``environment.yml`` / ``requirements.txt`` of the code repository and the repository link.
 
 Quick Start
 -----------

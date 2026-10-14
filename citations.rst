@@ -71,10 +71,21 @@ Gege, P. (1994).
 (Doctoral dissertation).
 Ludwig-Maximilians-Universität München.
 
+Harmel, T., Chami, M., Tormos, T., Reynaud, N., and Danis, P.-A. (2018).
+Sunglint correction of the Multi-Spectral Instrument (MSI)-SENTINEL-2 imagery over inland and
+sea waters from SWIR bands.
+*Remote Sensing of Environment*, 204, 308–321.
+https://doi.org/10.1016/j.rse.2017.10.022
+
 Harris, D. L., et al. (2023).
 One Tree Reef topographic and bathymetric lidar digital elevation model (2018) and
 roughness equivalent habitat data (2023). PANGAEA.
 https://doi.org/10.1594/PANGAEA.963918
+
+Gege, P. (2005).
+*The Water Colour Simulator WASI — User Manual for Version 3*. DLR Report,
+German Aerospace Center, Oberpfaffenhofen.
+https://elib.dlr.de/19338/1/WASI_manual_v3.pdf
 
 Hartmann, K., Kelbe, D. R., and Cilliers, D. (2021).
 Physics-based satellite-derived bathymetry (SDB) using radiative transfer model (RTM)
@@ -82,10 +93,11 @@ inversion.
 *Remote Sensing of Environment*, 258, 112366.
 https://doi.org/10.1016/j.rse.2021.112366
 
-Gege, P. (2005).
-*The Water Colour Simulator WASI — User Manual for Version 3*. DLR Report,
-German Aerospace Center, Oberpfaffenhofen.
-https://elib.dlr.de/19338/1/WASI_manual_v3.pdf
+Hochberg, E. J., Andréfouët, S., and Tyler, M. R. (2003).
+Sea surface correction of high spatial resolution Ikonos images to improve bottom mapping in
+near-shore environments.
+*IEEE Transactions on Geoscience and Remote Sensing*, 41(7), 1724–1729.
+https://doi.org/10.1109/TGRS.2003.815408
 
 He, J., Lin, J., Ma, M., and Liao, X. (2024).
 Mapping topo-bathymetry of transparent tufa lakes using UAV-based photogrammetry and
@@ -106,6 +118,12 @@ Laanen, M. L. (2007).
 *Yellow Matters — Improving the Remote Sensing of Coloured Dissolved Organic Matter in
 Inland Freshwaters* (Doctoral dissertation).
 Vrije Universiteit Amsterdam.
+
+Lee, Z., Carder, K. L., and Arnone, R. A. (2002).
+Deriving inherent optical properties from water color: a multiband quasi-analytical algorithm
+for optically deep waters.
+*Applied Optics*, 41(27), 5755–5772.
+https://doi.org/10.1364/AO.41.005755
 
 Lee, Z., Carder, K. L., Mobley, C. D., Steward, R. G., and Patch, J. S. (1999).
 Hyperspectral remote sensing for shallow waters: 2. Deriving bottom depths and water
@@ -174,6 +192,27 @@ A system to measure the data quality of spectral remote-sensing reflectance of a
 environments.
 *Journal of Geophysical Research: Oceans*, 121(11), 8189–8207.
 https://doi.org/10.1002/2016JC012126
+
+Wong, C. Y. S., D'Odorico, P., Bhattacharjee, S., and Gamon, J. A. (2020).
+Spectral irradiance affects the relationships between leaf colour, chlorophyll and
+leaf N, P.
+*Remote Sensing*, 12(12), 2006.
+https://doi.org/10.3390/rs12122006
+
+Wessels, M., et al. (2015).
+Bathymetry of Lake Constance – a high-resolution survey in a large, deep lake.
+*zfv – Zeitschrift für Geodäsie, Geoinformation und Landmanagement*, 4.
+https://doi.org/10.12902/zfv-0079-2015
+
+Wong, C. Y. S., D'Odorico, P., Bhattacharjee, S., and Gamon, J. A. (2020).
+*Remote Sensing*, 12(12), 2006.
+https://doi.org/10.3390/rs12122006  [bitte Titel/Zitat prüfen]
+
+Xu, H. (2006).
+Modification of normalised difference water index (NDWI) to enhance open water features in
+remotely sensed imagery.
+*International Journal of Remote Sensing*, 27(14), 3025–3033.
+https://doi.org/10.1080/01431160600589179
 
 Xu, N., Ma, X., Ma, Y., Zhao, P., Yang, J., Wang, X. H., and Tian, S. (2021).
 Deriving Highly Accurate Shallow Water Bathymetry From Sentinel-2 and ICESat-2 Datasets

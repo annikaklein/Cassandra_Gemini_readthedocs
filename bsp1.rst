@@ -4,8 +4,8 @@ Example 1: Lake Constance
 Description of Study Site
 -------------------------
 
-.. todo:: Temperate meso-oligotrophic lake, turbid due to Rhine sediment; study area: western part of the lake
-   (bounding box 8.987716–9.019991°E, 47.684752–47.708437°N). Add map figure.
+.. todo:: Temperate meso-oligotrophic lake, turbid due to Rhine sediment; study area: western sub-basin
+   (Untersee, 6.38 km², 8.988–9.020°E, 47.685–47.708°N). Add map figure.
 
 Data
 ----
@@ -22,7 +22,7 @@ Data
    * - Reference bathymetry
      - Airborne LiDAR, IGKB (2015), https://doi.org/10.1594/PANGAEA.855987
    * - Water level
-     - 394.86 m NHN (Konstanz)
+     - 394.86 m NHN (Konstanz), 394.94 m NHN (Berlingen)
 
 Running the Pipeline
 --------------------

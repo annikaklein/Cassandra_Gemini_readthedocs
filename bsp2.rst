@@ -5,7 +5,7 @@ Description of Study Site
 -------------------------
 
 .. todo:: Wave-exposed tropical coral reef in clear oceanic water, Great Barrier Reef, Australia
-   (AOI 152.0358–152.1001°E, 23.4770–23.5185°S). Add map figure.
+   (entire reef, 27.88 km², 152.036–152.101°E, 23.478–23.516°S). Add map figure.
 
 Data
 ----

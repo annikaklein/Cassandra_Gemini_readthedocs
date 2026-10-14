@@ -24,9 +24,9 @@ Quick Start
    enddate      = "2014-03-31"
    TARGET_SCALE = 30
    PLOT_BANDS   = True
-   CX_METHOD    = "E1"           # TSM:  "E1" (Ficek) | "E2" (Parwati)
-   CP_METHOD    = "A"            # Chl-a: "A" (Albert) | "E2" (Abbas)
-   AY_METHOD    = "A"            # CDOM:  "A" (Albert) | "E1" (Ficek)
+   CX_METHOD    = "E1"           # TSM:   "A" | "E1" | "E2"
+   CP_METHOD    = "A"            # Chl-a: "A" | "E1" | "E2"
+   AY_METHOD    = "A"            # CDOM:  "A" | "E1" | "E2"
 
 Parameters
 ^^^^^^^^^^
@@ -93,60 +93,41 @@ displayed as plots.
 
 ----
 
-``CX_METHOD``
-"""""""""""""
+``CX_METHOD`` / ``CP_METHOD`` / ``AY_METHOD``
+"""""""""""""""""""""""""""""""""""""""""""""""
 
-Method used to estimate Total Suspended Matter concentration *C*\ :sub:`X`
-(Step 2.2 in the pipeline).
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 80
-
-   * - Value
-     - Method
-   * - ``"E1"``
-     - Empirical, Ficek et al. (2011) (``compute_cx_cspm_for_all_images``)
-   * - ``"E2"``
-     - Empirical, Parwati et al. (2023) (``compute_cx_tss_for_all_images``)
-
-----
-
-``CP_METHOD``
-"""""""""""""
-
-Method used to estimate Phytoplankton Chlorophyll-a concentration *C*\ :sub:`P`
-(Step 2.3 in the pipeline).
+Retrieval method for Total Suspended Matter *C*\ :sub:`X` (Step 2.2),
+Chlorophyll-a *C*\ :sub:`P` and CDOM absorption *a*\ :sub:`Y`\ (λ\ :sub:`0`\ ) (Step 2.3).
+Each parameter can be derived by any of three pathways, which can be freely combined
+(3\ :sup:`3` = 27 versions, see :doc:`methods`).
 
 .. list-table::
    :header-rows: 1
-   :widths: 20 80
+   :widths: 14 28 28 30
 
    * - Value
-     - Method
+     - ``CX_METHOD``
+     - ``CP_METHOD``
+     - ``AY_METHOD``
    * - ``"A"``
-     - Albert (2004): joint inversion with CDOM (Step 2.3c)
-   * - ``"E2"``
-     - Empirical, Abbas et al. (2019), GROC-4 (``compute_cp_abbas_groc4_for_all_images``)
-
-----
-
-``AY_METHOD``
-"""""""""""""
-
-Method used to estimate CDOM absorption *a*\ :sub:`Y`\ (λ\ :sub:`0`\ )
-(Step 2.3 in the pipeline).
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 80
-
-   * - Value
-     - Method
-   * - ``"A"``
-     - Albert (2004): joint inversion with Chl-a (Step 2.3c)
+     - Albert (2004), semi-analytical
+     - Albert (2004), joint inversion
+     - Albert (2004), joint inversion
    * - ``"E1"``
-     - Empirical, Ficek et al. (2011) (``compute_cdom_for_all_images``)
+     - Ficek et al. (2011)
+     - Ficek et al. (2011)
+     - Ficek et al. (2011)
+   * - ``"E2"``
+     - Parwati et al. (2023)
+     - Abbas et al. (2019)
+     - Wong et al. (2020)
+
+.. note::
+   The currently released ``SDB.py`` / notebook implements ``CX_METHOD`` = ``"E1"``, ``"E2"``,
+   ``CP_METHOD`` = ``"A"``, ``"E2"`` and ``AY_METHOD`` = ``"A"``, ``"E1"``. The remaining
+   pathways (CX ``"A"``, CP ``"E1"``, AY ``"E2"``) are described in the publication and
+   :doc:`methods` but are not yet part of this release; unsupported values raise a
+   ``ValueError``.
 
 ----
 
@@ -628,9 +609,9 @@ Loads all physics-based model coefficients from ``parameters.py`` and builds
    * - ``ko``
      - Empirical coefficient κ\ :sub:`0` in the diffuse attenuation coefficient *K*\ :sub:`d`
    * - ``k1u``, ``k2u``
-     - Empirical coefficients for the upwelling attenuation *K*\ :sub:`u` (``k1w``, ``k2w`` in ``parameters.py``)
+     - Empirical coefficients for the upwelling attenuation *K*\ :sub:`u,W` (``k1w``, ``k2w`` in ``parameters.py``)
    * - ``k1b``, ``k2b``
-     - Empirical coefficients for the bottom attenuation *K*\ :sub:`b`
+     - Empirical coefficients for the bottom attenuation *K*\ :sub:`u,B`
 
 ----
 
@@ -785,29 +766,23 @@ Runs for both GEE and local mode.
 2.2 Total Suspended Matter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Computes the Total Suspended Matter (TSM) concentration *C*\ :sub:`X`
-per pixel for all scenes. Two empirical methods are available, selected via
-``CX_METHOD``. Runs for both GEE and local mode.
+Computes the TSM concentration *C*\ :sub:`X` per pixel for all scenes, using the
+pathway selected via ``CX_METHOD`` (``"A"``, ``"E1"`` or ``"E2"``, see above and :doc:`methods`).
+Runs for both GEE and local mode.
 
 .. code-block:: python
 
    if CX_METHOD == "E2":
-       # Parwati et al. (2023): empirical TSS model
+       # Parwati et al. (2023)
        Cx_results = sdb.compute_cx_tss_for_all_images(
-           mission=mission,
-           all_corrected_images=all_corrected_images,
-           region=region,
-           plot=True,
-           plot_contours=True,
+           mission=mission, all_corrected_images=all_corrected_images,
+           region=region, plot=True, plot_contours=True,
        )
    elif CX_METHOD == "E1":
        # Ficek et al. (2011): C_X = 5590 * R_rs(798)^0.95
        Cx_results = sdb.compute_cx_cspm_for_all_images(
-           mission=mission,
-           all_corrected_images=all_corrected_images,
-           region=region,
-           plot=True,
-           plot_contours=True,
+           mission=mission, all_corrected_images=all_corrected_images,
+           region=region, plot=True, plot_contours=True,
        )
    else:
        raise ValueError(f"Unknown CX_METHOD: {CX_METHOD}")
@@ -818,24 +793,8 @@ per pixel for all scenes. Two empirical methods are available, selected via
        arr[np.isnan(arr)] = 0
        entry["C_X"] = arr
 
-**What this cell does:**
-
-Retrieves the TSM concentration *C*\ :sub:`X` [g m\ :sup:`-3`] per pixel and
-replaces NaN pixels by 0. The result serves as initial estimate in Step 3.1.
-
-.. list-table:: Method comparison
-   :header-rows: 1
-   :widths: 20 25 55
-
-   * - ``CX_METHOD``
-     - Reference
-     - Description
-   * - ``"E1"``
-     - Ficek et al. (2011)
-     - Empirical power law on the NIR reflectance.
-   * - ``"E2"``
-     - Parwati et al. (2023)
-     - Empirical model for turbid coastal water.
+Retrieves *C*\ :sub:`X` [g m\ :sup:`-3`] and replaces NaN pixels by 0. The result serves as
+initial estimate in Step 3.1 (and as input to Step 2.3 Method A).
 
 .. list-table:: Outputs
    :header-rows: 1
@@ -851,27 +810,10 @@ replaces NaN pixels by 0. The result serves as initial estimate in Step 3.1.
 2.3 Phytoplankton Chlorophyll-a and CDOM
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Chlorophyll-a (*C*\ :sub:`P`) and CDOM (*a*\ :sub:`Y`) are retrieved either
-empirically (``"E1"``/``"E2"``) or jointly with the Albert (2004) inversion
-(``"A"``, Step 2.3c). If ``"A"`` is chosen for either parameter, Step 2.3c is
-executed and overwrites the results of Steps 2.3 and 2.3b.
-
-.. list-table:: Methods
-   :header-rows: 1
-   :widths: 20 20 20 40
-
-   * - Parameter
-     - ``"A"``
-     - ``"E1"``
-     - ``"E2"``
-   * - ``CP_METHOD``
-     - Albert (2004)
-     - —
-     - Abbas et al. (2019), GROC-4
-   * - ``AY_METHOD``
-     - Albert (2004)
-     - Ficek et al. (2011)
-     - —
+*C*\ :sub:`P` and *a*\ :sub:`Y` are retrieved either jointly with the Albert (2004)
+inversion (``"A"``, Step 2.3c) or individually with the empirical methods ``"E1"``/``"E2"``.
+If ``"A"`` is chosen for either parameter, Step 2.3c is executed and overwrites the results
+of Steps 2.3a and 2.3b.
 
 2.3a – Chlorophyll-a (``CP_METHOD == "E2"``)
 """""""""""""""""""""""""""""""""""""""""""""
@@ -883,11 +825,8 @@ executed and overwrites the results of Steps 2.3 and 2.3b.
    if CP_METHOD == "E2":
        # Abbas et al. (2019): GROC-4 algorithm
        CP_results = sdb.compute_cp_abbas_groc4_for_all_images(
-           mission=mission,
-           all_corrected_images=all_corrected_images,
-           region=region,
-           plot=True,
-           verbose=True,
+           mission=mission, all_corrected_images=all_corrected_images,
+           region=region, plot=True, verbose=True,
        )
        for entry in CP_results:
            arr = entry["C_P"]
@@ -895,10 +834,10 @@ executed and overwrites the results of Steps 2.3 and 2.3b.
            entry["C_P"] = arr
            Chl_results.append({"Image": entry["Image"], "C_a": entry["C_P"]})
 
-Retrieves *C*\ :sub:`a` [µg L\ :sup:`-1`]; NaN pixels are set to 0 and the result
-is stored under the key ``"C_a"``.
+Retrieves *C*\ :sub:`a` [µg L\ :sup:`-1`]; NaN pixels are set to 0 and the result is stored
+under the key ``"C_a"``.
 
-2.3b – CDOM Absorption (``AY_METHOD == "E1"``)
+2.3b – CDOM absorption (``AY_METHOD == "E1"``)
 """"""""""""""""""""""""""""""""""""""""""""""""
 
 .. code-block:: python
@@ -906,13 +845,10 @@ is stored under the key ``"C_a"``.
    a_CDOM_results_alt = []
 
    if AY_METHOD == "E1":
-       # Ficek et al. (2011): empirical model
+       # Ficek et al. (2011)
        aY_results = sdb.compute_cdom_for_all_images(
-           mission=mission,
-           all_corrected_images=all_corrected_images,
-           region=region,
-           plot=True,
-           landsat_min_clip=0.1,
+           mission=mission, all_corrected_images=all_corrected_images,
+           region=region, plot=True, landsat_min_clip=0.1,
        )
        for entry in aY_results:
            arr = entry["a_CDOM"]
@@ -1130,9 +1066,8 @@ outputs of Steps 2.1–2.3 as starting points. Results are stored in nested dict
 3.2 Results: Depth Map Export
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Selects the final water depth map *z*\ :sub:`B` (SR_B4, case ``B4`` / pipeline
-mode ``A``), saves it as GeoTIFF and displays it using the ``cmo.deep``
-colourmap.
+Selects the final water depth map *z*\ :sub:`B` (SR_B4, case ``B4`` / pipeline mode ``A``),
+saves it as GeoTIFF and displays it using the ``cmo.deep`` colourmap.
 
 .. code-block:: python
 
@@ -1148,8 +1083,8 @@ colourmap.
            zB_all_bands=zB_all_bands,
        )
 
-**Output:** ``<OUTPUT_ROOT>/<scene_id>/Image_<NN>/CASE_B4_A/zB.tif`` — single-band
-float32 GeoTIFF (EPSG:4326), water depth in metres, NaN = no data.
+**Output:** ``<OUTPUT_ROOT>/<scene_id>/Image_<NN>/CASE_B4_A/zB.tif`` — single-band float32
+GeoTIFF (EPSG:4326), water depth in metres, NaN = no data.
 
 ----
 
@@ -1168,7 +1103,7 @@ validation. The appropriate method depends on the water body type.
      - Method
      - Notes
    * - **Ocean / tidal coast**
-     - Tidal model (e.g. FES2024, TPXO)
+     - Tidal model (e.g. FES2022, TPXO)
      - Global or regional tidal constituents; applied at the scene acquisition timestamp
    * - **Ocean / tidal coast**
      - Gauge measurements
