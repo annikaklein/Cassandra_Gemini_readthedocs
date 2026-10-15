@@ -15,7 +15,7 @@ shallow western basin of the Untersee in front of Horn, Germany (AOI 6.38 km²;
 - Continuous fine-sediment input from the Rhine keeps the water meso-oligotrophic with reduced
   optical transparency (Heege et al., 2004); Secchi depth 6–9 m.
 
-.. figure:: _static/Study_Sites.png
+.. figure:: _static/Study_Sites-1.png
    :width: 90%
    :align: center
    :alt: Study sites
@@ -91,7 +91,7 @@ Retrieval of Version 6 (*Cassandra Gemini*) within 0–10 m:
      - 0.24 m
      - −0.03 m
 
-.. figure:: _static/LC_fig_combined_6panel_new2.png
+.. figure:: _static/LC_fig_combined_6panel_new2-1.png
    :width: 100%
    :align: center
    :alt: Validation Lake Constance

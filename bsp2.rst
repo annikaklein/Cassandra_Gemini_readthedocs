@@ -21,7 +21,7 @@ One Tree Island, the small rubble cay in its lagoon; since the entire reef syste
   reticulate patch reefs with near-vertical walls ("The Labyrinth"; coral heads 5–30 m in
   diameter, micro-channels < 5 m).
 
-.. figure:: _static/Study_Sites.png
+.. figure:: _static/Study_Sites-1.png
    :width: 90%
    :align: center
    :alt: Study sites
@@ -95,7 +95,7 @@ Retrieval of Version 6 (*Cassandra Gemini*) within 0–10 m:
      - 0.58 m
      - −0.05 m
 
-.. figure:: _static/OTR_fig_combined_6panel_new.png
+.. figure:: _static/OTR_fig_combined_6panel_new-1.png
    :width: 100%
    :align: center
    :alt: Validation One Tree Reef
