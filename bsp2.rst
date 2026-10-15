@@ -108,7 +108,6 @@ coordinates manually in the next cell.
 4. Run the remaining cells (coefficients, water depth, TSM, Chl-a/CDOM, optimisation) and the
    export cell; the depth map is saved as ``zB.tif`` (see :doc:`code`).
 
-.. todo:: Add screenshots of the configuration cell and the Step 0 outputs (MNDWI, water mask, sunglint-corrected bands).
 
 Results
 -------
@@ -159,5 +158,3 @@ maps. Panel (b) shows spatially coherent gaps where depths exceed the 10 m retri
   the transition depth of 4.92–6.38 m.
 
 See :doc:`results` for the comparison with the EOMAP product.
-
-.. todo:: Add the link to the results dataset (DOI).

@@ -154,5 +154,3 @@ overestimates it. Small wind-driven breaking waves and residual land–water mix
 Horn shoreline may contribute. In the parity plot (f) most points fall within ±1 m, and a
 substantial fraction within ±0.5 m at shallow depths; deviations from the 1:1 line increase beyond
 ≈ 4 m. See :doc:`results` for the full analysis.
-
-.. todo:: Add the link to the results dataset (DOI).
