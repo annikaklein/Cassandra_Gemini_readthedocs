@@ -50,27 +50,62 @@ Running the Pipeline
 
 The scene is retrieved via Google Earth Engine (``data_source = "gee"``).
 
-1. Set the configuration cell:
+**1. Configuration**
 
-   .. code-block:: python
+.. code-block:: python
 
-      mission     = "Landsat"
-      data_source = "gee"
-      startdate   = "2014-03-20"
-      enddate     = "2014-03-31"
-      CX_METHOD   = "E1"
-      CP_METHOD   = "A"
-      AY_METHOD   = "A"
+   mission     = "Landsat"
+   data_source = "gee"
+   startdate   = "2014-03-20"
+   enddate     = "2014-03-31"
+   CX_METHOD   = "E1"
+   CP_METHOD   = "A"
+   AY_METHOD   = "A"
 
-2. Authenticate with Google Earth Engine and draw the AOI on the map
-   (8.988–9.020°E, 47.685–47.708°N), or enter the corner coordinates manually.
-3. Select the scene ``LC08_L2SP_194027_20140329_20200911_02_T1`` from the previewed collection.
-4. Draw the deep-water polygon for the sunglint correction
-   (9.024–9.033°E, 47.691–47.695°N), or enter it manually.
-5. Run the remaining cells (coefficients, water depth, TSM, Chl-a/CDOM, optimisation) and the
-   export cell; the depth map is saved as ``zB.tif`` (see :doc:`code`).
+**2. Area of interest**
 
-.. todo:: Add screenshots of the configuration cell, the AOI map and the sunglint polygon.
+After authentication with Google Earth Engine, an interactive map opens. Draw the AOI
+(8.988–9.020°E, 47.685–47.708°N, shallow western basin of the Untersee in front of Horn) with the
+rectangle tool, or press ENTER and enter the corner coordinates manually in the next cell.
+
+.. figure:: _static/LC_aoi.png
+   :width: 90%
+   :align: center
+   :alt: AOI definition on the interactive map
+
+   Interactive map for drawing the area of interest (blue rectangle) on Lake Constance.
+
+**3. Scene selection**
+
+The image collection for the chosen date range and AOI is searched and previewed. For Lake Constance
+two scenes are found (1: 2014-03-29, 2: 2014-03-20). Scene 1 (29 March 2014,
+``LC08_L2SP_194027_20140329_20200911_02_T1``) is selected because it matches the airborne LiDAR
+survey (29–30 March 2014) and has low cloud cover (3.56 %).
+
+.. figure:: _static/LC_scene_selection.png
+   :width: 90%
+   :align: center
+   :alt: Scene selection
+
+   Preview of the two Landsat 8 scenes found for the AOI; the layers can be toggled in the layer control.
+
+**4. Sunglint reference area**
+
+For the sunglint correction, a homogeneous, optically deep water patch free of shallow-water signals is
+drawn on the selected scene (here 9.024–9.033°E, 47.691–47.695°N, 0.004 km²), or entered manually in
+the next cell.
+
+.. figure:: _static/LC_sunglint.png
+   :width: 90%
+   :align: center
+   :alt: Deep-water polygon for sunglint correction
+
+   Deep-water reference polygon (blue square, south-east of the scene) for the sunglint regression.
+
+**5. Retrieval and export**
+
+Run the remaining cells (coefficients, water depth, TSM, Chl-a/CDOM, optimisation) and the export
+cell. The depth map is saved as ``zB.tif`` (see :doc:`code`).
 
 Results
 -------

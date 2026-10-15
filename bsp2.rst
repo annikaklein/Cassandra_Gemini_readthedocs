@@ -55,13 +55,47 @@ Data
 Running the Pipeline
 --------------------
 
-This example uses a locally stored scene (``data_source = "local"``).
+Running the Pipeline
+~~~~~~~~~~~~~~~~~~~~
 
-1. Download the scene ``LC08_L2SP_090076_20181009_20200830_02_T2`` (e.g. from USGS EarthExplorer)
-   into a local folder.
-2. Set the configuration cell with ``data_source = "local"`` and the retrieval methods.
-3. In Step 0, set the AOI and the local path:
+**Step 1: Define the area of interest (AOI)**
 
+After authenticating with Google Earth Engine, an interactive map opens.
+The ROI is drawn as a rectangle around One Tree Reef (Capricorn Bunker
+Group, southern Great Barrier Reef). Alternatively, the coordinates can be
+entered manually in the next cell.
+
+.. image:: _static/OTR_aoi.png
+   :width: 90%
+   :align: center
+   :alt: AOI selection for One Tree Reef
+
+**Step 2: Select the Landsat 8 scene**
+
+All Landsat 8 Collection 2 Level-2 scenes within the configured date range
+that intersect the ROI are loaded as separate map layers
+(``Landsat-8 1 | <date>``, ``Landsat-8 2 | <date>``, ...). Switch the layers on
+and off in the layer control and choose a scene that is cloud-free and
+shows little sunglint over the reef. Here, scene number 4 was selected.
+The scene number is then entered when prompted.
+
+.. image:: _static/OTR_scene_selection.png
+   :width: 90%
+   :align: center
+   :alt: Scene selection for One Tree Reef
+
+**Step 3: Define the deep-water reference area for sunglint correction**
+
+The selected scene is displayed together with the ROI. A polygon is drawn
+in optically deep, glint-affected open water outside the reef (blue
+rectangle). This area is used for the regression of the visible bands
+against the SWIR band. Alternatively, press ENTER and enter the
+coordinates manually in the next cell.
+
+.. image:: _static/OTR_sunglint.png
+   :width: 90%
+   :align: center
+   :alt: Deep-water polygon for sunglint correction at One Tree Reef
    .. code-block:: python
 
       aoi = sdb.aoi_from_bbox(152.035771, -23.518535, 152.10007, -23.476975)
